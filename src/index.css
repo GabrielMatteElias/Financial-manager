@@ -1,0 +1,40 @@
+:root {
+    font-size: 62.5%;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Dax-Regular', sans-serif !important;
+    box-sizing: border-box;
+    text-decoration: none;
+    outline: none;
+}
+
+.tituloPagina {
+    font-size: 3rem !important;
+    font-weight: bold !important;
+    text-transform: uppercase;
+    color: #557483;
+}
+
+.carregamentoPagina{
+    margin-top: 1.5rem;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #fff inset !important;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+.swal-popup {
+    z-index: 9999 !important; /* valor maior que o z-index do modal MUI */
+}

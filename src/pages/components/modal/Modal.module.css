@@ -1,0 +1,29 @@
+.modal_cabecalho {
+    background-color: #2980B9;
+    width: 100%;
+    text-align: center;
+    height: 7.5rem;
+    position: relative;
+    border-radius: 5px 5px 0 0;
+}
+
+.modal_cabecalho h1 {
+    color: #f2f2f2;
+    font-size: 3.8rem;
+    padding-top: 1.6rem;
+    font-weight: bold;
+    margin: 0;
+
+}
+
+.modal_close {
+    position: absolute;
+    top: 5%;
+    right: 1%;
+    color: #1f1e1e;
+}
+
+.modal_close:hover {
+    color: #414141;
+    cursor: pointer;
+}
