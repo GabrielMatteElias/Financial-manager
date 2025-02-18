@@ -1,8 +1,10 @@
 import React from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, CircularProgress } from "@mui/material";
 import { validarTamanhoCpfCnpj } from "../../../utils/formatadores";
 
-export function Tabela({ headers, data, alturaMaxima, iconeAcao, acaoIcone }) {
+export function Tabela({ headers, data, alturaMaxima, iconeAcao, acaoIcone, iconeCarregando }) {
+    console.log(iconeCarregando);
+    
     return (
         <TableContainer component={Paper} sx={{ maxHeight: alturaMaxima || '', overflow: 'auto' }}>
             <Table>
@@ -27,7 +29,7 @@ export function Tabela({ headers, data, alturaMaxima, iconeAcao, acaoIcone }) {
                             {iconeAcao && (
                                 <TableCell align="center">
                                     <IconButton onClick={() => acaoIcone(row)}>
-                                        {iconeAcao}
+                                        {(iconeCarregando && iconeCarregando.linha === row.id) ? <CircularProgress size={12} sx={{color: 'red'}}/> : iconeAcao}
                                     </IconButton>
                                 </TableCell>
                             )}

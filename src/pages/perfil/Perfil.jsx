@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Paper, Avatar, Typography, Divider, Grid2, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
 import userPhoto from '../../assets/userPhoto.jpg'
 import { ModalBasico } from '../components/modal/Modal';
 import { EditarPerfil } from './components/EditarPerfil';
+import UseFetch from '../../hooks/useFetch';
+import Swal from 'sweetalert2';
+import { formatadorData } from '../../utils/formatadores';
+import { isEmpty } from '../../utils/validadores';
 
 const modalStyle = {
     position: 'absolute',
@@ -17,30 +21,45 @@ const modalStyle = {
     boxShadow: 24,
 };
 
-const user = {
-    name: 'Gabriel Matte Elias',
-    email: 'gabriel@gmail.com',
-    phone: '(11) 98765-4321',
-    address: 'Rua das Flores, 123, São Paulo, SP',
-    dob: '10/12/2024',
-};
-
 export default function Perfil() {
 
     const [modalState, setModalState] = useState(false);
+    const [user, setUser] = useState({
+        nome: "",
+        sobrenome: "",
+        email: "",
+        celular: "",
+        nascimento: "",
+    });
     const [userPic, setUserPic] = useState(null);
 
+    const userFetch = async () => {
+        const res = await UseFetch(`get/user/${85242560010}`)
+        if (res.status_code === 200) {
+            setUser(res.status_res)
+        } else {
+            Swal.fire({
+                title: 'Falha ao buscar dados.',
+                icon: 'warning',
+                confirmButtonColor: '#2980B9',
+            })
+        }
+    }
+    console.log(user);
+
+    useEffect(() => {
+        userFetch()
+    }, [])
 
     const handleAvatarChange = (event) => {
-        const file = event.target.files[0];       
+        const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
+            console.log(reader);
+
             reader.onloadend = () => {
                 // Atualiza a foto do avatar no estado
-                setUserPic({
-                    ...userPhoto,
-                    src: reader.result,
-                });
+                setUserPic(reader.result,);
             };
             reader.readAsDataURL(file);
         }
@@ -78,8 +97,8 @@ export default function Perfil() {
                     <Box sx={{ position: 'relative', display: 'inline-block' }}>
                         {/* Avatar */}
                         <Avatar
-                            src={userPic ? userPic.src : userPhoto.src}
-                            alt={user.name}
+                            src={userPic}
+                            alt={user.nome || "Usuário"}
                             sx={{
                                 width: 100,
                                 height: 100,
@@ -127,7 +146,7 @@ export default function Perfil() {
                             component="h1"
                             sx={{ fontSize: '1.325rem' /* 32.5% maior que o padrão 1rem */ }}
                         >
-                            {user.name}
+                            {`${user.nome} ${user.sobrenome}`}
                         </Typography>
                         <Typography
                             variant="body1"
@@ -151,7 +170,7 @@ export default function Perfil() {
                             Telefone:
                         </Typography>
                         <Typography variant="body1" sx={{ fontSize: '1.325rem' }}>
-                            {user.phone}
+                            {user.celular}
                         </Typography>
                     </Grid2>
 
@@ -164,22 +183,10 @@ export default function Perfil() {
                             Data de Nascimento:
                         </Typography>
                         <Typography variant="body1" sx={{ fontSize: '1.325rem' }}>
-                            {user.dob}
+                            {user.nascimento ? formatadorData(user.nascimento) : ""}
                         </Typography>
                     </Grid2>
 
-                    <Grid2 xs={12}>
-                        <Typography
-                            variant="subtitle1"
-                            color="textSecondary"
-                            sx={{ fontSize: '1.325rem' }}
-                        >
-                            Endereço:
-                        </Typography>
-                        <Typography variant="body1" sx={{ fontSize: '1.325rem' }}>
-                            {user.address}
-                        </Typography>
-                    </Grid2>
                 </Grid2>
             </Paper>
         </Box>

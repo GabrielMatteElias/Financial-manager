@@ -166,14 +166,13 @@ export default function Login() {
 
         const res = await UseFetch(`auth/login`, 'POST', data)
 
-        if (res.includes('Login realizado com sucesso')){
-            
+        if (res.status_code === 202) {
             navegar('/')
-        } 
-        else if (res === 'Email ou senha incorretos!') {
+        }
+        else if (res.status_code === 401) {
             Swal.fire({
                 title: 'Falha na autenticação.',
-                text: res,
+                text: res.status_msg,
                 icon: 'warning',
                 confirmButtonColor: '#2980B9',
             })
@@ -203,11 +202,10 @@ export default function Login() {
 
         const res = await UseFetch(`auth/cad/user`, 'POST', data)
 
-        if (res.includes('sucesso')) {
-            console.log('teste');
+        if (res.status_code === 200) {
             Swal.fire({
                 icon: 'success', // Alterado para 'success' para combinar com a mensagem
-                title: 'Cadastro realizado com sucesso',
+                title: res.status_msg,
                 confirmButtonColor: '#2980B9',
                 customClass: {
                     popup: 'swal-popup'
@@ -219,11 +217,11 @@ export default function Login() {
             });
 
         }
-        else if (res.includes('cpf ou email')) {
+        else if (res.status_code === 409) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Erro ao realizar cadastro.',
-                text: `Conta já existente para o CPF ${cpf} ou Email ${email}.`,
+                text: res.status_msg,
                 confirmButtonColor: '#2980B9',
                 customClass: {
                     popup: 'swal-popup'  // Adiciona uma classe personalizada ao popup do SweetAlert
@@ -241,27 +239,23 @@ export default function Login() {
             return;
         }
 
-        const data = {
-            email
-        }
-
         const res = await UseFetch(`email/reset-password/${email}`, 'POST')
 
-        if (res === 'Email enviado com sucesso') {
+        if (res.status_code === 200) {
             Swal.fire({
                 icon: 'success', // Alterado para 'success' para combinar com a mensagem
                 title: 'Senha de recuperação criada.',
-                text: `Sua nova senha de acesso foi enviada para o e-mail gabrielmatteelias@gmail.com. Verifique sua caixa de entrada e spam.`,
+                text: res.status_msg,
                 confirmButtonColor: '#2980B9',
                 customClass: {
                     popup: 'swal-popup'
                 }
             })
         }
-        else if (res.includes('sem cadastro para o email')) {
+        else if (res.status_code === 404) {
             Swal.fire({
-                title: 'Falha na recuperação de Senha.',
-                text: res,
+                title: 'Falha ao recuperar Senha.',
+                text: res.status_msg,
                 icon: 'warning',
                 confirmButtonColor: '#2980B9',
             })
@@ -333,6 +327,7 @@ export default function Login() {
                                     type="submit"
                                     fullWidth
                                     variant="contained"
+                                    disabled={carregamento}
                                 >
                                     {carregamento ? <CircularProgress size={15} /> : 'Entrar'}
                                 </Button>
@@ -468,7 +463,7 @@ export default function Login() {
                                             />
                                         </Stack>
 
-                                        <Button type="submit" fullWidth variant="contained">
+                                        <Button type="submit" fullWidth variant="contained" disabled={carregamento}>
                                             {carregamento ? <CircularProgress size={15} /> : 'Cadastrar'}
                                         </Button>
                                     </Box>
@@ -511,6 +506,7 @@ export default function Login() {
                                     <Button
                                         type="submit"
                                         variant="contained"
+                                        disabled={carregamento}
                                     >
                                         {carregamento ? <CircularProgress size={15} /> : 'Solicitar Nova Senha'}
                                     </Button>

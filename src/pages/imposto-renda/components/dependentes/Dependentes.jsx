@@ -40,9 +40,13 @@ export function Dependentes() {
     const [cadastrarDependente, setCadastrarDependente] = useState(false); //Mostrar inputs
     const [hasInteracted, setHasInteracted] = useState(false); //Impede a animação do botão na primeira vez que o modal é exibido.
     const [listaDependentes, setListaDependentes] = useState([]); //Lista de dependentes
-    const [carregamento, setCarregamento] = useState(true); //Lista de dependentes
+    const [carregamento, setCarregamento] = useState(true);
     const [cpf, setCpf] = useState("");
     const [nome, setNome] = useState("");
+    const [carregamentoDelete, setCarregamentoDelete] = useState({
+        estado: false,
+        linha: null
+    });
 
     const getDependentes = async () => {
         const res = await UseFetch(`get/dependentes/88888888888`, 'GET')
@@ -88,6 +92,7 @@ export function Dependentes() {
         const data = { nome, cpf }
 
         const res = await UseFetch(`cad/dependente/88888888888`, 'POST', data)
+        console.log(res);
 
         if (res === 'Cadastrado com sucesso') {
             Swal.fire({
@@ -115,8 +120,18 @@ export function Dependentes() {
     };
 
     const handleDelete = async (linha) => {
+        setCarregamentoDelete({
+            estado: true,
+            linha: linha.id
+        })
         const res = await UseFetch(`delete/dependente/${linha.cpf}`, 'DELETE')
+        console.log(res);
+        
         if (res.includes('deletado com sucesso')) getDependentes()
+        setCarregamentoDelete({
+            estado: false,
+            linha: null
+        })
     };
 
     return (
@@ -127,7 +142,14 @@ export function Dependentes() {
                 <>
                     <Box>
 
-                        <Tabela headers={headers} data={listaDependentes} alturaMaxima={300} iconeAcao={<HighlightOffIcon color='error' />} acaoIcone={handleDelete} />
+                        <Tabela
+                            headers={headers}
+                            data={listaDependentes}
+                            alturaMaxima={300}
+                            iconeAcao={<HighlightOffIcon color='error' />}
+                            acaoIcone={handleDelete}
+                            iconeCarregando={carregamentoDelete}
+                        />
                         <Box
                             display="flex"
                             alignItems="center"
@@ -196,6 +218,8 @@ export function Dependentes() {
                                 color="primary"
                                 sx={{ width: '28rem', letterSpacing: '0.1rem' }}
                                 onClick={handleSubmit}
+                                disabled={carregamento}
+
                             >
                                 {carregamento ? <CircularProgress /> : 'Cadastrar'}
                             </Button>

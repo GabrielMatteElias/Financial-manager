@@ -1,4 +1,3 @@
-import { GetApp } from "@mui/icons-material";
 import { api, requestConfig } from "../config";
 
 export default async function UseFetch(endpoint, method, dados, contentType = 'application/json', token = null) {

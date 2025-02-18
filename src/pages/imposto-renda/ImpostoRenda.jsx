@@ -151,7 +151,7 @@ export default function ImpostoDeRenda() {
                         onChange={handleFileChange}
                     />
                     <label htmlFor="file-input">
-                        <Button variant="contained" sx={{ height: '3rem', width: '20rem' }} component="span" disabled={carregamento}>
+                        <Button variant="contained" sx={{ height: '3rem', width: '21rem' }} component="span" disabled={carregamento}>
                             {carregamento ?
                                 <CircularProgress size={17} /> :
                                 'Anexar informe de rendimentos'}
